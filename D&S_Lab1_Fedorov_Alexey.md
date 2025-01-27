@@ -162,7 +162,7 @@ Let;s check - how it works. 8080 port.
 
 Everything works corrent.
 
-# d. Volumes: Mount (bind) a directory from the host file system to Nginx containers and update the contents of index.html in the host file system, re-deploy and confirm in the browser that the web page's content is updated.
+### d. Volumes: Mount (bind) a directory from the host file system to Nginx containers and update the contents of index.html in the host file system, re-deploy and confirm in the browser that the web page's content is updated.
 
 I created `index.html` is separate directory.
 
@@ -199,3 +199,5 @@ The result is:
 Everyting works correct!
 
 # Task 3. Configure L7 Loadbalaner
+
+## 1. Install Nginx in the host machine or add a third container in the docker-compose that will act as loadbalancer, and configure it in front of two containers in a manner that it should distribute the load in a Weighted Round Robin approach.
