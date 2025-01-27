@@ -88,3 +88,21 @@ You can see how I replace index.html in punkt `a`.
 
 ### c. Build the image from the Dockerfile, tag it during build as nginx:<stX>, check/validate local images, and run your custom made docker image.
 
+To build docker image, I use `docker build`.
+
+![image](https://github.com/user-attachments/assets/3c909140-7ea3-4101-b833-e3db78d4270d)
+
+Build is successfull.
+
+### d. Access via browser and validate that your custom page is hosted.
+
+Started container.
+
+![image](https://github.com/user-attachments/assets/c56e3828-6693-45f4-bf15-206c23c2e71a)
+
+Let's go to the browser and check the result.
+
+![image](https://github.com/user-attachments/assets/2695fc52-cad7-4ff9-82be-eb31fce31898)
+
+Everything works correct.
+
