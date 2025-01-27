@@ -201,3 +201,39 @@ Everyting works correct!
 # Task 3. Configure L7 Loadbalaner
 
 ## 1. Install Nginx in the host machine or add a third container in the docker-compose that will act as loadbalancer, and configure it in front of two containers in a manner that it should distribute the load in a Weighted Round Robin approach.
+
+I decided to make third container. It will be standart nginx image. Let's see modified docker-compose.yml
+
+![image](https://github.com/user-attachments/assets/71f55ace-8939-4b0c-8c36-fa8e2ddb981a)
+
+Crucial changes:
+1) Third contrainer nginx with volume to nginx.conf
+2) No port forwarding on pink & purple containers.
+3) Network `nginxnet`
+
+Pink & purple don't need port forwarding, because we will connect to them through the balancer. Balancer can connect to them because they are in same network, moreover there is service discovery in docker compose (in file name space).
+
+I also prepared nginx configuration:
+
+![image](https://github.com/user-attachments/assets/f19d25e1-f370-4331-b0a7-874c11cdf435)
+
+Server will accept requests on port 80 and forward to upstream. Upstream contains 2 adresses - ping and purple.
+
+Let's execute:
+
+![image](https://github.com/user-attachments/assets/e5414b7c-289f-4a1f-bdf8-a0afbca6e96e)
+
+## 2. Access the page of Nginx ALB and validate, it is load-balancing the traffic (you see two different content per page reload).
+
+To show how it works, I decided to use `curl`.
+
+![image](https://github.com/user-attachments/assets/d8f76ddf-a723-47a7-b046-6d5227c28c2f)
+
+Everything works correct!
+
+# References
+
+1. `docker --help`
+2. https://docs.docker.com/compose/how-tos/networking/
+3. https://docs.docker.com/reference/compose-file/build/
+4. https://www.dmosk.ru/miniinstruktions.php?mini=nginx-balancing
