@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/7732d3ae-9b24-4d4a-8215-6cb35d63a557)# Lab 1. Containerization and application layer load balancing
+# Lab 1. Containerization and application layer load balancing
 
 ## Done by Fedorov Alexey
 
@@ -106,3 +106,96 @@ Let's go to the browser and check the result.
 
 Everything works correct.
 
+# Task 2: Work with multi-container environment
+
+## 1. Create another Dockerfile similar to step 1.4 (Let’s call it container B), and an index.html with different content.
+
+Let's change index.html content
+
+![image](https://github.com/user-attachments/assets/54677769-8760-4ba4-a521-f0e8bb848ee4)
+
+I changed text color from pink to purple.
+
+Build:
+
+![image](https://github.com/user-attachments/assets/1fd792f1-f7fb-4633-86e5-3fc757382e42)
+
+## 2. Write a docker-compose file with the below properties
+
+Let's write docker-compose.yml file
+
+### a. Multi-build: Builds both Dockerfiles and runs both images.
+
+I need to split Dockerfiles and index.html's 
+
+![image](https://github.com/user-attachments/assets/61986d20-f11d-4203-b1b6-bf03e2120648)
+
+Start writing docker-compose.yml
+
+![image](https://github.com/user-attachments/assets/98891680-4aa7-46ce-a298-e2fa2821a950)
+
+Section `build` is responsible for image building. `context` is directory which will be build context.
+
+### b. Port mapping: Container A should listen to port 8080 and container B should listen to port 9090. (They host two different web pages)
+
+Lets add ports mapping to docker-compose.
+
+![image](https://github.com/user-attachments/assets/04e098a1-1212-486a-a8f8-3eb43894919f)
+
+Section `ports` is responsible for port mapping. It contains list of port mapping. Each mapping has host port (left side) and container port (right side).
+
+### c. Confirm both websites are accessible
+
+Run docker-compose.yml !
+
+`docker compose up -d --build`
+
+![image](https://github.com/user-attachments/assets/98d50ebc-d4c3-406d-ac23-4c197da7c5dc)
+
+Let;s check - how it works. 8080 port.
+
+![image](https://github.com/user-attachments/assets/7d0cb62e-c523-4733-a6af-207f46884b46)
+
+9090 port.
+
+![image](https://github.com/user-attachments/assets/d12b1aac-b04e-40d2-bf71-64c1452fd072)
+
+Everything works corrent.
+
+# d. Volumes: Mount (bind) a directory from the host file system to Nginx containers and update the contents of index.html in the host file system, re-deploy and confirm in the browser that the web page's content is updated.
+
+I created `index.html` is separate directory.
+
+![image](https://github.com/user-attachments/assets/3aab6f7d-bd64-4e7f-b421-7d49b5735dc5)
+
+Then added volumes section to docker compose
+
+![image](https://github.com/user-attachments/assets/d940480c-948c-43d5-9c26-873a268299ab)
+
+There is `ro` flag at the end of volume path. It mean that mount has read only permissions.
+
+Let's see how it works.
+
+`docker compose up -d --build --force-recreate`
+
+![image](https://github.com/user-attachments/assets/298b7374-469f-43bd-9951-f4e74d2708a7)
+
+I changed color of text to red.
+
+![image](https://github.com/user-attachments/assets/511eb6dc-7aac-447e-a715-e988039450ac)
+
+The result is:
+
+![image](https://github.com/user-attachments/assets/14566f82-ccf0-48a8-9398-cb27035e1bf0)
+
+I change color to blue.
+
+![image](https://github.com/user-attachments/assets/9c65311c-d7ba-4a61-a81d-bbea8fef79be)
+
+The result is:
+
+![image](https://github.com/user-attachments/assets/a97e069d-88c4-4798-b387-700c0d3f2bce)
+
+Everyting works correct!
+
+# Task 3. Configure L7 Loadbalaner
