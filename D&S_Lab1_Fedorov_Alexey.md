@@ -6,15 +6,15 @@
 
 ## 1. Pull Nginx v1.23.3 image from dockerhub registry and confirm it is listed in local images
 
-To pull image, i used command `docker pull`.
+To pull an image, I used the command `docker pull`.
 
 ![image](https://github.com/user-attachments/assets/c140ec1d-bb58-45ec-9820-447a906cc162)
 
-To list images, i used command `docker images (docker image ls)`.
+To list images, I used the command `docker images` (or `docker image ls`).
 
 ![image](https://github.com/user-attachments/assets/c696dd48-a7c2-4f25-af17-44ec4a1e329d)
 
-Image pulled correctly.
+The image was pulled successfully.
 
 ## 2. Run the pulled Nginx as a container with the below properties
 
@@ -22,17 +22,17 @@ a. Map the port to 8080.
 b. Name the container as nginx-<stX>.
 c. Run it as daemon .
 
-To follow the lists of requirements, I will use the following flags:
+To follow the list of requirements, I will use the following flags:
 
 - `-p` - sets port mapping
-- `-n` - sets container name
-- `-d` - runs container in background (as a daemon)
+- `--name` (instead of `-n`) - sets container name
+- `-d` - runs container in the background (as a daemon)
 
-Command is:
+The command is:
 
 `docker run -p 80:8080 --name nginx-fedorov-alexey -d nginx:1.23.3`
 
-Container started successfully.
+The container started successfully.
 
 ****![image](https://github.com/user-attachments/assets/6c0c8711-7949-405b-940d-1fb001aaa929)
 
@@ -40,17 +40,17 @@ Container started successfully.
 
 ### a. List open ports in host machine.
 
-I used `ss` command to list ports 
+I used the `ss` command to list ports.
 
 ![image](https://github.com/user-attachments/assets/60222256-da51-4d22-b315-c4abb3079b98)
 
-Port is present on host machine.
+The port is present on the host machine.
 
 ### b. List open ports inside the running container.
 
-To list ports inside container, I need to install `netstat` or `ss` inside container. Lets do it.
+To list ports inside the container, I need to install `netstat` or `ss` inside container. Lets do it.
 
-I attached to container shell using exec with interactive mode.
+I attached to the container shell using `exec` with interactive mode.
 
 ![image](https://github.com/user-attachments/assets/f1b6886a-07a7-4722-b888-583b4470faf9)
 
@@ -58,7 +58,7 @@ Installed iproute2 package, that contains `ss` utility.
 
 ![image](https://github.com/user-attachments/assets/fd29dd6b-5618-4dd9-b522-45b1915af573)
 
-Now we can see that port allocated.
+Now we can see that the port is allocated.
 
 ![image](https://github.com/user-attachments/assets/29b60d96-d993-4e82-83a3-f95b25483f81)
 
@@ -74,7 +74,7 @@ Everything works correct.
 
 ### a. Image tag should be Nginx v1.23.3.
 
-I created Dockerfile and used nginx 1.23.3.
+I created a Dockerfile and used Nginx version 1.23.3.
 
 ![image](https://github.com/user-attachments/assets/ee04ab18-66d0-4a77-a3aa-aece64095631)
 
@@ -84,11 +84,11 @@ My custom index.html.
 
 ![image](https://github.com/user-attachments/assets/60c07579-c6c1-4368-95da-9b32213fd7d4)
 
-You can see how I replace index.html in punkt `a`.
+You can see how I replaced `index.html` in `4.a`.
 
 ### c. Build the image from the Dockerfile, tag it during build as nginx:<stX>, check/validate local images, and run your custom made docker image.
 
-To build docker image, I use `docker build`.
+To build the Docker image, I use the `docker build` command.
 
 ![image](https://github.com/user-attachments/assets/3c909140-7ea3-4101-b833-e3db78d4270d)
 
@@ -110,7 +110,7 @@ Everything works correct.
 
 ## 1. Create another Dockerfile similar to step 1.4 (Let’s call it container B), and an index.html with different content.
 
-Let's change index.html content
+Let's change index.html content.
 
 ![image](https://github.com/user-attachments/assets/54677769-8760-4ba4-a521-f0e8bb848ee4)
 
@@ -126,7 +126,7 @@ Let's write docker-compose.yml file
 
 ### a. Multi-build: Builds both Dockerfiles and runs both images.
 
-I need to split Dockerfiles and index.html's 
+I need to split the Dockerfile and index.html.
 
 ![image](https://github.com/user-attachments/assets/61986d20-f11d-4203-b1b6-bf03e2120648)
 
@@ -134,15 +134,15 @@ Start writing docker-compose.yml
 
 ![image](https://github.com/user-attachments/assets/98891680-4aa7-46ce-a298-e2fa2821a950)
 
-Section `build` is responsible for image building. `context` is directory which will be build context.
+The section `build` is responsible for image building. `context` is the directory that will be the build context.
 
 ### b. Port mapping: Container A should listen to port 8080 and container B should listen to port 9090. (They host two different web pages)
 
-Lets add ports mapping to docker-compose.
+Let's add port mapping to the `docker-compose.yml` file
 
 ![image](https://github.com/user-attachments/assets/04e098a1-1212-486a-a8f8-3eb43894919f)
 
-Section `ports` is responsible for port mapping. It contains list of port mapping. Each mapping has host port (left side) and container port (right side).
+The section `ports` is responsible for port mapping. It contains a list of port mappings. Each mapping has the host port (left side) and the container port (right side).
 
 ### c. Confirm both websites are accessible
 
@@ -152,11 +152,11 @@ Run docker-compose.yml !
 
 ![image](https://github.com/user-attachments/assets/98d50ebc-d4c3-406d-ac23-4c197da7c5dc)
 
-Let;s check - how it works. 8080 port.
+Let's check how it works with port 8080.
 
 ![image](https://github.com/user-attachments/assets/7d0cb62e-c523-4733-a6af-207f46884b46)
 
-9090 port.
+Port 9090.
 
 ![image](https://github.com/user-attachments/assets/d12b1aac-b04e-40d2-bf71-64c1452fd072)
 
@@ -172,7 +172,7 @@ Then added volumes section to docker compose
 
 ![image](https://github.com/user-attachments/assets/d940480c-948c-43d5-9c26-873a268299ab)
 
-There is `ro` flag at the end of volume path. It mean that mount has read only permissions.
+There is a `:ro` flag at the end of the volume path. It means that the mount has read-only permissions.
 
 Let's see how it works.
 
@@ -202,22 +202,22 @@ Everyting works correct!
 
 ## 1. Install Nginx in the host machine or add a third container in the docker-compose that will act as loadbalancer, and configure it in front of two containers in a manner that it should distribute the load in a Weighted Round Robin approach.
 
-I decided to make third container. It will be standart nginx image. Let's see modified docker-compose.yml
+I decided to make a third container. It will be a standard Nginx image. Let's see the modified `docker-compose.yml`.
 
 ![image](https://github.com/user-attachments/assets/71f55ace-8939-4b0c-8c36-fa8e2ddb981a)
 
 Crucial changes:
-1) Third contrainer nginx with volume to nginx.conf
-2) No port forwarding on pink & purple containers.
-3) Network `nginxnet`
+1) A third container for Nginx with a volume for `nginx.conf`.
+2) No port forwarding on the pink and purple containers.
+3) A network named `nginxnet`.
 
-Pink & purple don't need port forwarding, because we will connect to them through the balancer. Balancer can connect to them because they are in same network, moreover there is service discovery in docker compose (in file name space).
+The pink and purple containers don't need port forwarding because we will connect to them through the balancer. The balancer can connect to them because they are in the same network; moreover, there is service discovery in Docker Compose (in the file namespace).
 
 I also prepared nginx configuration:
 
 ![image](https://github.com/user-attachments/assets/f19d25e1-f370-4331-b0a7-874c11cdf435)
 
-Server will accept requests on port 80 and forward to upstream. Upstream contains 2 adresses - ping and purple.
+The server will accept requests on port 80 and forward them to the upstream. The upstream contains two addresses: pink and purple.
 
 Let's execute:
 
