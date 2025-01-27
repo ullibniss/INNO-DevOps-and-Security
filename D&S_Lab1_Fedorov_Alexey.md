@@ -72,4 +72,19 @@ Everything works correct.
 
 ## 4. Create a Dockerfile similar to the below properties (let’s call it container A).
 
+### a. Image tag should be Nginx v1.23.3.
+
+I created Dockerfile and used nginx 1.23.3.
+
+![image](https://github.com/user-attachments/assets/ee04ab18-66d0-4a77-a3aa-aece64095631)
+
+### b. Create a custom index.html file and copy it to your docker image to replace the Nginx default webpage
+
+My custom index.html.
+
+![image](https://github.com/user-attachments/assets/60c07579-c6c1-4368-95da-9b32213fd7d4)
+
+You can see how I replace index.html in punkt `a`.
+
+### c. Build the image from the Dockerfile, tag it during build as nginx:<stX>, check/validate local images, and run your custom made docker image.
 
