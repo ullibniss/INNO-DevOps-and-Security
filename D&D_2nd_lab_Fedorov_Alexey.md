@@ -1,4 +1,4 @@
-#  D&S Lab 2: Infrastructure as Code with clouds (alternate lab flavor)
+![image](https://github.com/user-attachments/assets/71acdcf5-dceb-41f4-b4c5-53803acfdf10)#  D&S Lab 2: Infrastructure as Code with clouds (alternate lab flavor)
 
 ## Completed by Fedorov Alexey (tg: @ullibniss)
 
@@ -43,6 +43,9 @@ Each of these three services has multiple replicas with different types, and the
 The architecture is:
 
 ![image](https://github.com/user-attachments/assets/0a76a93d-c62e-473d-a2b2-15b2b85b66cc)
+
+
+**Language** - Java. Joke, i hate Java. **Golang**.
 
 **Github** - https://github.com/ullibniss/INNO-Sevice-Mash
 
@@ -260,8 +263,106 @@ In real practice, we almost newer use poor playbooks where everything all in one
 
 **Github**: https://github.com/ullibniss/INNO-Sevice-Mash/tree/master/ansible  
 
+### Preparation
+
 I will use the following folder structure for `ansible`:
 
 ![image](https://github.com/user-attachments/assets/360156b1-12f9-4435-9bc6-9a53e04c8698)
 
-I will show implementation for only coffee service, because others are almost the same. You can find them on github.
+I will show implementation of `ansible` roles and playbooks only for coffee service, because others are almost the same. You can find them on github.
+
+### Inplementation
+
+First of all we need to implement `role` for servicce. Let's start with tasks, then I will add variables for parametrization in they needed.
+
+Role will have 5 tasks. 1 of them is auxiliary and 4 are for usage:
+
+- `main.yml` - this is task that is responsible to proxy tasks call to concrete task inside role. I will show it further.
+- `build.yml` - this is task for building our server. Actually building docker image.
+- `deploy.yml` - this is task to deploy service. It will render all the files to build and run service.
+- `start.yml` - this is task to start service.
+- `stop.yml` - this is task to stop service.
+
+Let's start implementation:
+
+`main.yml`
+
+![image](https://github.com/user-attachments/assets/57f3ca22-1bba-4161-8a1c-0418232d25c1)
+
+As we can see, when I will implement playbook, I will use variable `coffee_task` to call concrete task.
+
+`build.yml`
+
+![image](https://github.com/user-attachments/assets/06abdaa3-bffc-4f4e-91dc-8acd0505ec4b)
+
+Here we can see default `docker build` command. There are 2 build - `coffee` and `sidecar`, because `sidecar` used in pair with coffee. To be honest, it is too small, to implement separate role. We also can see first two real variables here. I using `coffee_tag`, because use `latest` is bad practice. But default value will be `latest` :).
+
+`deploy.yml`
+
+![image](https://github.com/user-attachments/assets/9ce95a6d-18e0-4bd8-80d7-8dc3b8cb8437)
+
+The most interesting task in my opinion is `deploy.yml`. I clone repo of service to for build. If there were `docker registry`, i would build it on local or separate machine. But in this case, I will build on target server. 
+
+`start.yml`
+
+![image](https://github.com/user-attachments/assets/026fe295-11cc-4d61-bf32-707e4d1ac200)
+
+`stop.yml`
+
+![image](https://github.com/user-attachments/assets/6850f2aa-22ae-40a1-b8ea-d296611b5324)
+
+There are simple start and stop `docker-compose` tasks. Nothing interesting.
+
+When tasks are ready, I need to implement `defaults/main.yml` with default variables.
+
+![image](https://github.com/user-attachments/assets/07a9d3a6-0477-4c57-963c-1fb607039a43)
+
+You might have noticed that there no variables `default_user` and `deploy_dir`. This variables have no default parameter and must be defined separately. This is because they we dont know in what context our role will be used. And this variable may be general, if there more that one service on server.
+
+Last thing is to modify `docker-compose.yml` as I promised earlier.
+
+![image](https://github.com/user-attachments/assets/118c013d-27af-45e7-8b8d-4c0ca0e58185)
+
+Key changes:
+
+- Image tag is also templated.
+- Still we have separate servers, we dont need external network. Because of this, I will create bridge between `coffee` and `sidecar-lb` inside docker-compose.
+- `MASTER_URL` variable changed with `master load balances`'s IP.
+
+Okay, when we finished role implementation, we can implement playbooks and inventories.
+
+There will be 4 playbooks. They are the same as the role tasks, except the `main` task. All playbooks are the same. Only thing that changes is `coffee_task` variable.
+
+`deploy.yml`
+
+![image](https://github.com/user-attachments/assets/68e85dfd-581f-4bc3-b6ff-3eb14502685b)
+
+`build.yml`
+
+![image](https://github.com/user-attachments/assets/7e9d9869-67ff-47a7-a389-540c7f2c37ac)
+
+To make our role available for playbooks, I will configure `ansible.cfg` file.
+
+![image](https://github.com/user-attachments/assets/ee5ffbff-35d0-4db2-a865-9d4f9b76cafe)
+
+Settings:
+
+- `host_key_checking = False` - apply `-o HostKeyChecking=no` flag for `ssh` connection
+- `roles_path=../roles` - is like PATH variable, but for roles
+- `inventory=localhost.cfg` - configures default inventory file.
+
+Now we can implement inventory file. There are inventories: `localhost.cfg` and `remote.cfg`
+
+`localhost.cfg`
+
+![image](https://github.com/user-attachments/assets/858c3bd2-9e66-4cec-a0d4-226efda8ba0f)
+
+`remote.cfg`
+
+![image](https://github.com/user-attachments/assets/a7b6b0a8-b825-4ec1-8062-2635976f589c)
+
+I also implemented roles and playbooks for other services, you can check it on **[Github](https://github.com/ullibniss/INNO-Sevice-Mash/tree/master/ansible)**
+
+### Deployment
+
+
