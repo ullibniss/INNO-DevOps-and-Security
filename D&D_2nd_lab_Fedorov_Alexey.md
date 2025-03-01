@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/71acdcf5-dceb-41f4-b4c5-53803acfdf10)#  D&S Lab 2: Infrastructure as Code with clouds (alternate lab flavor)
+#  D&S Lab 2: Infrastructure as Code with clouds (alternate lab flavor)
 
 ## Completed by Fedorov Alexey (tg: @ullibniss)
 
