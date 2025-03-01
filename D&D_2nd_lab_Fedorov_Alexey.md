@@ -262,6 +262,6 @@ In real practice, we almost newer use poor playbooks where everything all in one
 
 I will use the following folder structure for `ansible`:
 
-![image](https://github.com/user-attachments/assets/215388f7-e723-43b7-94d0-00f08ae558c9)
+![image](https://github.com/user-attachments/assets/360156b1-12f9-4435-9bc6-9a53e04c8698)
 
 I will show implementation for only coffee service, because others are almost the same. You can find them on github.
