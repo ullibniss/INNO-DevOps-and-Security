@@ -126,7 +126,7 @@ I will 2 use providers:
 
 There is no point in storing `terraform` manifests for cloud infrastructure on github without tf.state, if tf.state storing nowhere, except the localhost. It is very bad practice and can cause dizasters for infrastruction. I will store it in timeweb s3  service. In real case better backup this s3 bucket.
 
-### Infrastucture
+### Inplementation
 
 I will build hardware infrastructure in private network. There will be only two public server - our Coffee service.
 
@@ -138,4 +138,99 @@ Let's implement it in separated files:
 - `variables.tf`
 - `output.tf`
 
+Let's start with `network.tf`:
+
+![image](https://github.com/user-attachments/assets/87dbb6f4-1177-4b93-8f99-a853fffbaec3)
+
+I prepared cloud VPC to use it in `compute.tf` to connect server to this network.
+
+I also generated passwords and stored them in locals in `variables.tf`.
+
+![image](https://github.com/user-attachments/assets/38160f95-88a5-4e78-975e-fe92f83f4343)
+
+Next step is to create `output.tf` for generated password. We will have ability to see them.
+
+![image](https://github.com/user-attachments/assets/c9acb941-e444-47a5-8d41-135727a57819)
+
+After all preparations are ready we can create `compute.tf`.
+
+![image](https://github.com/user-attachments/assets/3b80f282-f221-4ef0-a436-3d56055b9770)
+
+Here is some different instances:
+
+- `twc_presets` - server resources confgiuration. On **Timeweb** cloud we can create server with preset (like `flavor` in **Openstack**) or with our resource configuration. With preset is cheaper.
+- `twc_os` - server's os preset.
+- `twc_server` - is cloud vpc.
+- `twc_floating_ip` - public ip address. it is floating, because if we will recreate it, the ip address will change randomly.
+
+I created 5 servers: master-lb-server, coffee-server, drink-server, milk-server and syrup-server. All servers are the same, except the coffee-server. It has it's own public ip.  
+
+Moreover every service has provision via cloud-init. There 2 cloud init files for coffee and others servers.
+
+`coffee.yaml`
+
+![image](https://github.com/user-attachments/assets/9bbffcbe-24b8-41a2-8a4d-bfb6d507453c)
+
+`others.yaml`
+
+![image](https://github.com/user-attachments/assets/2e05388c-d82b-4daa-87e8-9fea3e0e858b)
+
+I need to say, that ssh conenction to any host provided through coffee server. Use can see how I configured firewalld for forwarding.
+
+The last thing is WAF. I configured it in `firewalld.tf`. I configured it only for `coffee-server`, but to be honest it is nessesary for every host in private network. I decided that for lab, `coffee-server` is enough.
+
+![image](https://github.com/user-attachments/assets/8f302ba7-4420-4baf-9409-b9a7b8bebff1)
+
+You can see filewall and rules instances. Rules provide access for:
+
+- 443 - HTTTPS
+- 1900 - SSH to master-lb-server
+- 1901 - SSH to coffee-server
+- 1902 - SSH to drink service
+- 1903 - SSH to milk service
+- 1904 - SSH to syrup service
+
+### Deploy
+
+Let's deploy our hardware infrastructure.
+
+Firstly I need to init terraform. 
+
+```
+terraform init
+```
+
+![image](https://github.com/user-attachments/assets/85113055-756c-4ccf-a0b3-fb15e99aa41e)
+
+Next let's plan infrastructure and verify that everything coffect.  
+
+```
+terraform plan
+```
+
+![image](https://github.com/user-attachments/assets/c49740ee-25f2-4d46-a729-bd42d8637d37)
+
+Now we can verify that configuration is worikng and terraform will create exactly what we need.
+
+Next step is to apply our configuration. 
+
+```
+terraform apply
+```
+
+![image](https://github.com/user-attachments/assets/488d37f9-7f20-4e9c-a47c-275cf14096f2)
+
+Cloud rejected my `leet` network `192.133.7.0/24`, so I have to change it to `192.168.7.0/24`.
+
+Try again and everyting deployed!
+
+![image](https://github.com/user-attachments/assets/d6b1d335-ec30-48a4-9015-f50bba59f03e)
+
+We can proof it in web interface.
+
+![image](https://github.com/user-attachments/assets/92810226-8cf9-4fe5-a273-74738d4c04c3)
+
+![image](https://github.com/user-attachments/assets/803d3e1b-4791-405c-9137-512dd2441aa5)
+
+Let's try to connect to master load balance to proof, that forwarding works correct.
 
