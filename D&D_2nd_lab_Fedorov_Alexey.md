@@ -107,6 +107,8 @@ using Vargant tool. Include the explanation into the report about the inability 
 cloud or if it was impossible for you to setup a VPN.
 ```
 
+**Github**: https://github.com/ullibniss/INNO-Sevice-Mash/tree/master/terraform
+
 ### Preparation
 
 Let's implement infrastructure with `terraform`. First we need to initilize provider and configure backend. I will hide all sensitive data.
@@ -228,9 +230,38 @@ Try again and everyting deployed!
 
 We can proof it in web interface.
 
-![image](https://github.com/user-attachments/assets/92810226-8cf9-4fe5-a273-74738d4c04c3)
+![image](https://github.com/user-attachments/assets/0e899dcb-9f05-4bf8-8307-afa56e8c4bfc)
 
 ![image](https://github.com/user-attachments/assets/803d3e1b-4791-405c-9137-512dd2441aa5)
 
 Let's try to connect to master load balance to proof, that forwarding works correct.
 
+![image](https://github.com/user-attachments/assets/74062a16-8ba0-48ce-8848-8fd0ca3a56b4)
+
+Everything works. Deploy if hardware infrastructure finished!
+
+## 4.3. Choose Software Configuration Management (SCM) tool.
+
+```
+Ansible is the industry standard. Of course, we have other
+SCM solutions such as SaltStack, Puppet, Chef. You can try them
+but remember that it is probably more difficult to work with these
+tools and you are responsible for your choice.
+```
+
+I decided to use Ansible. I also have good experience with SaltStack, but I think it is too hard (complex) for lab.
+
+## 4.4 Using SCM tool, write a playbook tasks to deliver and run your application to cloud instance/local VM.
+
+```
+Try to separate your configuration files into inventory/roles/playbooks files.
+In real practice, we almost newer use poor playbooks where everything all in one.
+```
+
+**Github**: https://github.com/ullibniss/INNO-Sevice-Mash/tree/master/ansible  
+
+I will use the following folder structure for `ansible`:
+
+![image](https://github.com/user-attachments/assets/215388f7-e723-43b7-94d0-00f08ae558c9)
+
+I will show implementation for only coffee service, because others are almost the same. You can find them on github.
