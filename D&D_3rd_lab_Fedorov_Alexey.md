@@ -248,3 +248,80 @@ Let's verify that our application works. I forwarded 8080 port from VM to 9001 o
 
 Everything works correct!
 
+# Task 3 - Polish the CICD
+
+## 3.5 Update the CD stages to be able to deploy the web application using Ansible.
+
+First of all, I implemented ansible role and playbooks for application. Let's see key tasks:
+
+`deploy.yml`
+
+![image](https://github.com/user-attachments/assets/1d140ac7-f80e-470b-b05b-baaf70f0b98c)
+
+`start.yml`
+
+![image](https://github.com/user-attachments/assets/0b71c003-cbaf-4463-b762-018121f23fcc)
+
+And modified job.
+
+![image](https://github.com/user-attachments/assets/8cb6e00f-f2e3-4d15-82ad-3440495ea989)
+
+Let's check, how it works.
+
+![image](https://github.com/user-attachments/assets/9060e9a0-35e6-46be-923e-64cf49b74f8c)
+
+As a result, I got deploy with Ansible.
+
+## 3.6 Update the pipeline to support multi-branch (e.g. master and develop) and jobs should be triggered based on the specific target branch.
+
+There is `rules` option in Gitlab CI/CD configuration that allow to run pipeline conditionally, depending on triggers. I've already configured this option in my jobs, but only for `master`. Let's modify it.
+
+I will execute CI jobs for `develop` and `master` branch, and CD jobs only on `master` branch.
+
+CI jobs:
+
+![image](https://github.com/user-attachments/assets/a1167653-b2fa-47b3-a2d4-f41b8f63cae0)
+
+CD job:
+
+![image](https://github.com/user-attachments/assets/e5d10e37-8077-47fc-92ee-bcee2eb665ac)
+
+Next step is to check how it works. Let's compare two pipelines.
+
+![image](https://github.com/user-attachments/assets/f26fa1e1-1280-44ad-bbea-3ca953dea567)
+
+As we can see, `develop` pipeline dont have last job.
+
+## 3.7 Update keywords such as cache, artifact, needs, and dependencies to have more control of pipeline execution.
+
+To update ketwords the need to know what they do:
+
+- **cache** - Stores and reuses files between pipeline runs to speed up jobs (e.g., dependency directories).
+- **artifact** - Saves files generated in a job for use in later jobs or for download (e.g., build outputs).
+- **needs** - Allows jobs to run out of order by defining direct dependencies between jobs.
+- **dependencies** - Specifies which artifacts from upstream jobs are needed for the current job.
+
+Unfortunately, I dont need keyswords like `artifact` nad `dependencies` in my pipeline. The reason why is that the only artifact in my pipeline is `docker image`. This artifact is stored in external storage and downloaded with docker.
+
+The `cache` keywords I will use only in build task. 
+
+![image](https://github.com/user-attachments/assets/7637ea3e-49b4-43d3-88b3-f7f48b207415)
+
+It must improve job speed.
+
+What about `needs`, I will insert it in every job, to specify the previous job.
+
+![image](https://github.com/user-attachments/assets/1028d864-91b2-4d2d-b543-88322bd78412)
+
+Let's try if the updated jobs works.
+
+![image](https://github.com/user-attachments/assets/a9e01acc-7802-4374-8447-501d7844b4d7)
+
+Everything works correct!
+
+# References
+
+- https://docs.gitlab.com/install/docker/installation/
+- https://docs.gitlab.com/runner/configuration/
+- https://docs.gitlab.com/ci/
+- https://docs.gitlab.com/ci/yaml/
