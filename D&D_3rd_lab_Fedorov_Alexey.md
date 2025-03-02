@@ -1,8 +1,9 @@
-![image](https://github.com/user-attachments/assets/0a1b0181-125e-4abd-bcd7-1a6b93bccac5)# D&S Lab 3: CI/CD Infrastructure
+# D&S Lab 3: CI/CD Infrastructure
 
 ## Completed by Fedorov Alexey (tg: @ullibniss)
 
 ```
+
 In this lab, we will focus on how to set up CI/CD infrastructure by deploying Gitlab on-premise:
 
 - Self-managed Gitlab server
