@@ -1,4 +1,4 @@
-# D&S Lab 3: CI/CD Infrastructure
+![image](https://github.com/user-attachments/assets/0a1b0181-125e-4abd-bcd7-1a6b93bccac5)# D&S Lab 3: CI/CD Infrastructure
 
 ## Completed by Fedorov Alexey (tg: @ullibniss)
 
@@ -172,5 +172,79 @@ To validate authentication, we have to proof that SSH for VM2 to VM3 works witho
 
 I works! We can use SSH in the same way in jobs.
 
+# Task 2 - Create CI/CD Pipeline
 
+## 2.1 Clone the project you have created in step 1.2.g.
+
+Let's clone it in Lab 2 directory.
+
+![image](https://github.com/user-attachments/assets/fc14708f-4919-4c43-97fa-32826dad37a2)
+
+## 2.2 Write a simple web application in any programming language. (E.g. Random text or Addition of two numbers)
+
+I implemented `A+B` golang application.
+
+It works like this:
+
+![image](https://github.com/user-attachments/assets/241bae71-69a7-4789-84b1-2cdb55c9d96b)
+
+I also implemented tests for this application:
+
+![image](https://github.com/user-attachments/assets/57f3ec40-cd3e-4ee5-879a-d116920d65d6)
+
+![image](https://github.com/user-attachments/assets/fc4c5a21-ef8b-46af-9e97-fcb6da63b353)
+
+## 2.3 Create CI/CD pipeline (.gitlab-ci.yml)
+
+Let's implement CI/CD pipeline.
+
+We need to start with stages.
+
+![image](https://github.com/user-attachments/assets/e9271f33-60fe-4193-9023-2c6f16c59eb3)
+
+Here is all five stages:
+
+- [CI] Build
+- [CI] Test
+- [CI] Docker build
+- [CI] Docker push
+- [CD] Deploy
+
+### 2.3.a CI stages of the pipeline should.
+
+i.​ Build the application
+
+![image](https://github.com/user-attachments/assets/ce68bb00-d7c9-4bd3-b8b9-aaea9c75f773)
+
+ii.​ Run test (to check the application works ok)
+
+![image](https://github.com/user-attachments/assets/ee9098c1-7637-49d2-875c-8d5bb7f30208)
+
+iii.​ Build docker image (Note: you need Dockerfile)
+
+![image](https://github.com/user-attachments/assets/53cb6017-adee-4aef-86d9-445bbb63e677)
+
+iv.​ Push to your docker hub account.
+
+![image](https://github.com/user-attachments/assets/d18a0592-2972-42b0-a73a-3cd17d420816)
+
+### 2.3.b CD stages of the pipeline should:
+
+i.​ Pull the docker image and deploy it on the deployment server
+
+![image](https://github.com/user-attachments/assets/230061e6-1a5e-4a9e-94cd-bec938dac940)
+
+## 2.4.​ Validate that the deployment is successful by accessing the web app via the browser on deployment server side.
+
+We can see that the entire pipeline is successfull.
+
+![image](https://github.com/user-attachments/assets/36520e38-c1b1-42e6-aa85-7a78d29fa717)
+
+Let's verify that our application works. I forwarded 8080 port from VM to 9001 on Host.
+
+![image](https://github.com/user-attachments/assets/79dc00fe-3623-4c2c-9a2f-9c32e0fb5343)
+
+![image](https://github.com/user-attachments/assets/61125d80-64cd-4b72-afee-cd6883534622)
+
+Everything works correct!
 
