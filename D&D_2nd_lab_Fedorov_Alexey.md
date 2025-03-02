@@ -1,4 +1,4 @@
-#  D&S Lab 2: Infrastructure as Code with clouds (alternate lab flavor)
+![image](https://github.com/user-attachments/assets/e63be801-a59d-4847-abe3-fa68cf0c357a)#  D&S Lab 2: Infrastructure as Code with clouds (alternate lab flavor)
 
 ## Completed by Fedorov Alexey (tg: @ullibniss)
 
@@ -365,4 +365,28 @@ I also implemented roles and playbooks for other services, you can check it on *
 
 ### Deployment
 
+Let's start deployment. To deploy our services to remote servers I will use the following command:
 
+```
+ansible-playbook -i remote.cfg {deploy.yml,build.yml,start.yml} -K
+```
+![image](https://github.com/user-attachments/assets/4da960c8-0d0f-403a-84c7-255db25c8acd)
+
+![image](https://github.com/user-attachments/assets/989aaff0-3d59-4f9c-a895-2b02fdc50788)
+
+As we can see all tasks executed correctly.
+
+I repeated this process for all other services. And as a result I've got:
+
+![image](https://github.com/user-attachments/assets/abf91be4-a609-4661-822c-200a2ab65182)
+
+This indicates that system works correctly. I explain: 
+
+- If one of milk, syrup or drink didn't worked,  we would not have all the parts of message.
+- if one of master lb, sidecar lb or coffee didn't worked, we wound not have any answer.
+
+We can also see result in web browser:
+
+![image](https://github.com/user-attachments/assets/6f7ec376-dabd-4fa6-aaa8-5478cae9c267)
+
+# Task 5 - Play with SCM cases
