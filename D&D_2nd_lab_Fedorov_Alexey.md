@@ -417,3 +417,19 @@ Here is variable:
 
 ![image](https://github.com/user-attachments/assets/3663de2c-6e0a-457a-9c2a-89e5fbb3eb72)
 
+This task renders keys from templates and configures ssh.
+
+- `manage_packages.yml`
+
+![image](https://github.com/user-attachments/assets/6e573e0c-5228-470c-a273-22828b783cc3)
+
+As we can see, apt updated package list and installs docker packages. It is important to install `docker` this way (not docker.io), because there are security updates.
+
+# References
+
+- https://github.com/timeweb-cloud/terraform-provider-timeweb-cloud
+- https://registry.terraform.io/providers/hashicorp/random/latest/docs
+- https://cloudinit.readthedocs.io/en/latest/
+- https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html
+- https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
+- `ansible-doc` command, to see documentation of modules.
