@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/e63be801-a59d-4847-abe3-fa68cf0c357a)#  D&S Lab 2: Infrastructure as Code with clouds (alternate lab flavor)
+#  D&S Lab 2: Infrastructure as Code with clouds (alternate lab flavor)
 
 ## Completed by Fedorov Alexey (tg: @ullibniss)
 
@@ -390,3 +390,30 @@ We can also see result in web browser:
 ![image](https://github.com/user-attachments/assets/6f7ec376-dabd-4fa6-aaa8-5478cae9c267)
 
 # Task 5 - Play with SCM cases
+
+While I completing previous tasks, I implemented one more role. I decided to show it in task 5. 
+
+This role is for advanced provision of servers. It will make 3 things:
+
+1) Configure `/hosts` file. Set aliases for local network.
+2) Configure `ssh`. Deploy keys and make some secury options.
+3) Install needed packages. In this current example install docker packages.
+
+Every responsibility is one task.
+
+- `manage_network.yml`
+
+![image](https://github.com/user-attachments/assets/b484c71f-18cb-43da-8cce-cd7490b0a648)
+
+Is renders the following file to `/etc/hosts`:
+
+![image](https://github.com/user-attachments/assets/30043b7c-b835-4cd8-8f08-868e33ae79bb)
+
+Here is variable:
+
+![image](https://github.com/user-attachments/assets/72734598-2bfd-4a4a-a806-f6bdbfd65a41)
+
+- `manage_keys.yml`
+
+![image](https://github.com/user-attachments/assets/3663de2c-6e0a-457a-9c2a-89e5fbb3eb72)
+
