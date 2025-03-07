@@ -269,3 +269,62 @@ release, scale and upgrade Pods.
 
 ## 5.1 Figure out the necessary Deployment spec fields.
 
+A Deployment provides a declarative way to manage Pods. Key fields include:
+
+Necessary Fields:
+- `apiVersion`: apps/v1
+- `kind`: Deployment
+- `metadata`: Deployment name and labels.
+- `spec`:
+  - `replicas`: Number of desired Pods.
+  - `selector`: Matches Pods with labels.
+  - `template`:
+    - `metadata`: Labels for Pods.
+      - `spec`:
+        - `containers`:
+          - Image, ports, environment variables, resource limits.
+         
+## 5.2 Make sure that you wiped previous Pod manifests. Write a Deployment spec for your pod(s) and deploy the application.
+
+I wiped previous `Pod manifests`.
+
+![image](https://github.com/user-attachments/assets/d1547285-c174-424d-a03d-1765d2106395)
+
+Next, I implemented Deployment.
+
+![image](https://github.com/user-attachments/assets/a0ac4b28-3143-4ff3-bd72-afa5e9c84c84)
+
+I applied it.
+
+![image](https://github.com/user-attachments/assets/ee00aef8-90ad-4999-8943-76b9969c359e)
+
+## 5.3 With kubectl , get the Deployments and describe them.
+
+Let's verify `deployment` status:
+
+```
+kubectl get deployments
+```
+
+![image](https://github.com/user-attachments/assets/134e9095-8206-41fc-996b-7659ae636eb6)
+
+
+Deployment been succesfully deployed. Now I will `describe` deployment.
+
+![image](https://github.com/user-attachments/assets/0490c407-6636-4359-ae20-6e7948eec9a6)
+
+## 5.4 Update your Deployment manifest to scale your application to three replicas.
+
+To scale my application to three replicas, I simply need to modify `Replicas` field in configuration.
+
+![image](https://github.com/user-attachments/assets/711b9024-187d-483c-9e9c-2e56c323d382)
+
+Deploy:
+
+![image](https://github.com/user-attachments/assets/db1618d5-dd2c-498c-a0fb-848752f418a5)
+
+It successfully upscaled!
+
+## 5.5 Access pod shell and logs using Deployment labels.
+
+## 5.6 
