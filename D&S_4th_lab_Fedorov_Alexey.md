@@ -327,4 +327,37 @@ It successfully upscaled!
 
 ## 5.5 Access pod shell and logs using Deployment labels.
 
-## 5.6 
+## 5.6 . Make any application configuration change in your Deployment yaml and try to update the application. Monitor what are happened with pods (--watch).
+
+Let's edit application configuration. I added environment variable to change base url.
+
+![image](https://github.com/user-attachments/assets/352d54d1-a571-4f85-96d7-e77a6a67ef7e)
+
+Deploy:
+
+![image](https://github.com/user-attachments/assets/05e20a2f-d153-40bf-a9a1-3fe6611f61f4)
+
+Using `kubectl get pods --watch`, we can see, that old pods are terminated, and new pods are running now.
+
+## 5.7 Rollback to previous application version using Deployment.
+
+To rollback to previous application version I need to check deployment history.
+
+```
+kubectl rollout history deployment youtrack-deployment
+```
+
+![image](https://github.com/user-attachments/assets/1b55c327-b545-4f65-aa6b-2fa902c14bac)
+
+Unfortunately, there no cause specified for previous deployment.
+
+I can rollback using version number. Let's do it.
+
+![image](https://github.com/user-attachments/assets/42ab616a-5ca0-4f38-bcc3-b37668715c94)
+
+As we can see, deployment rolled back. To verify that this is prevoius version, we can check, that there no environment variables.
+
+![image](https://github.com/user-attachments/assets/f30de954-09cb-4696-8749-81051ce7ca24)
+
+## 5.8 Set up requests and limits for CPU and Memory for your application pods. Provide a PoC that it works properly. Explain and show what is happened when app reaches the CPU usage limit? And memory limit?
+
