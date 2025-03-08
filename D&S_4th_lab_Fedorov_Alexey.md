@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/4ace1517-9086-45c7-9c38-c8d948f6bfd6)![image](https://github.com/user-attachments/assets/c240ec84-cf0d-4844-a7e6-c5aafad03f05)# D&S Lab 4: Kubernetes Basics
+# D&S Lab 4: Kubernetes Basics
 
 ## Completed by Fedorov Alexey (tg: @ullibniss)
 
