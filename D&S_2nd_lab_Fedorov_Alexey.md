@@ -51,24 +51,24 @@ The architecture is:
 
 # Task 3 - Dockerize your application
 
-I dockerized all the applications. I added Dockerfile and docker-compose.yml file. 
+I dockerized all the applications. I added a Dockerfile and a `docker-compose.yml` file.
 
 ### Dockerfile
 
-I dockerfile is multistaged. It is common practice for compiled languages like Golang. 
+My Dockerfile is multi-staged. It is a common practice for compiled languages like Golang.
 
 - 1st stage - builder
 - 2nd stage - runner
 
-Let's take a look of Dockerfile.
+Let's take a look at the Dockerfile.
 
 ![image](https://github.com/user-attachments/assets/71ebf0a9-4dbc-403b-a530-6f890ae5f6a2)
 
-It is the same for every service, there no reason to show all of them.
+It is the same for every service; there is no reason to show all of them.
 
 ### Docker Compose
 
-I also prepared docker-compose.yml.
+I also prepared a `docker-compose.yml`.
 
 For Drink service (Milk, Syrup are the same):
 
@@ -82,7 +82,7 @@ For Master LoadBalancer:
 
 ![image](https://github.com/user-attachments/assets/c620c229-1d3b-47a9-9ab9-0b1ab4ddec47)
 
-This configuration is to run system on localhost. I will reconfigure it when I begin to implement cloud deploy.
+This configuration is to run the system on localhost. I will reconfigure it when I begin to implement cloud deployment.
 
 # Task 4 - Deliver your application using Software Configuration Management
 
@@ -98,7 +98,7 @@ the further tasks. Include a small explanation into the report why you were forc
 locally.
 ```
 
-I will use Timeweb. This my favourite Russian cloud. It have a fex cloud featurer, but it is cheap and has terraform provider.
+I will use Timeweb. This is my favorite Russian cloud. It has a few cloud features, but it is cheap and has a Terraform provider.
 
 ## 4.2 Use Terraform to deploy your required cloud instance.
 
@@ -114,7 +114,7 @@ cloud or if it was impossible for you to setup a VPN.
 
 ### Preparation
 
-Let's implement infrastructure with `terraform`. First we need to initilize provider and configure backend. I will hide all sensitive data.
+Let's implement the infrastructure with `terraform`. First, we need to initialize the provider and configure the backend. I will hide all sensitive data.
 
 `provider.tf`
 
@@ -129,11 +129,11 @@ I will 2 use providers:
 
 ![image](https://github.com/user-attachments/assets/38e82783-7fa8-47fe-a401-582c0b88f2c8)
 
-There is no point in storing `terraform` manifests for cloud infrastructure on github without tf.state, if tf.state storing nowhere, except the localhost. It is very bad practice and can cause dizasters for infrastruction. I will store it in timeweb s3  service. In real case better backup this s3 bucket.
+There is no point in storing `terraform` manifests for cloud infrastructure on GitHub without `tf.state` if `tf.state` is stored nowhere except on localhost. It is very bad practice and can cause disasters for the infrastructure. I will store it in Timeweb's S3 service. In a real case, it is better to back up this S3 bucket.
 
 ### Inplementation
 
-I will build hardware infrastructure in private network. There will be only two public server - our Coffee service.
+I will build the hardware infrastructure in a private network. There will be only two public servers—our Coffee service.
 
 Let's implement it in separated files:
 
@@ -143,34 +143,34 @@ Let's implement it in separated files:
 - `variables.tf`
 - `output.tf`
 
-Let's start with `network.tf`:
+I started with `network.tf`:
 
 ![image](https://github.com/user-attachments/assets/87dbb6f4-1177-4b93-8f99-a853fffbaec3)
 
-I prepared cloud VPC to use it in `compute.tf` to connect server to this network.
+I prepared a cloud VPC to use it in `compute.tf` to connect the server to this network.
 
 I also generated passwords and stored them in locals in `variables.tf`.
 
 ![image](https://github.com/user-attachments/assets/38160f95-88a5-4e78-975e-fe92f83f4343)
 
-Next step is to create `output.tf` for generated password. We will have ability to see them.
+The next step is to create `output.tf` for the generated passwords. We will have the ability to view them.
 
 ![image](https://github.com/user-attachments/assets/c9acb941-e444-47a5-8d41-135727a57819)
 
-After all preparations are ready we can create `compute.tf`.
+After all preparations are ready, we can create `compute.tf`.
 
 ![image](https://github.com/user-attachments/assets/3b80f282-f221-4ef0-a436-3d56055b9770)
 
-Here is some different instances:
+Here are some different instances:
 
-- `twc_presets` - server resources confgiuration. On **Timeweb** cloud we can create server with preset (like `flavor` in **Openstack**) or with our resource configuration. With preset is cheaper.
-- `twc_os` - server's os preset.
-- `twc_server` - is cloud vpc.
-- `twc_floating_ip` - public ip address. it is floating, because if we will recreate it, the ip address will change randomly.
+- `twc_presets` - server resource configuration. On **Timeweb** cloud, we can create a server with a preset (like `flavor` in **Openstack**) or with our custom resource configuration. Using a preset is cheaper.
+- `twc_os` - the server's OS preset.
+- `twc_server` - the cloud VPC.
+- `twc_floating_ip` - the public IP address. It is floating because if we recreate it, the IP address will change randomly.
 
-I created 5 servers: master-lb-server, coffee-server, drink-server, milk-server and syrup-server. All servers are the same, except the coffee-server. It has it's own public ip.  
+I created 5 servers: `master-lb-server`, `coffee-server`, `drink-server`, `milk-server`, and `syrup-server`. All servers are the same, except for the `coffee-server`, which has its own public IP.
 
-Moreover every service has provision via cloud-init. There 2 cloud init files for coffee and others servers.
+Moreover, every service has provisioning via cloud-init. There are 2 cloud-init files: one for the coffee server and one for the other servers.
 
 `coffee.yaml`
 
@@ -180,26 +180,26 @@ Moreover every service has provision via cloud-init. There 2 cloud init files fo
 
 ![image](https://github.com/user-attachments/assets/2e05388c-d82b-4daa-87e8-9fea3e0e858b)
 
-I need to say, that ssh conenction to any host provided through coffee server. Use can see how I configured firewalld for forwarding.
+I need to mention that SSH connections to any host are provided through the coffee server. You can see how I configured `firewalld` for forwarding.
 
-The last thing is WAF. I configured it in `firewalld.tf`. I configured it only for `coffee-server`, but to be honest it is nessesary for every host in private network. I decided that for lab, `coffee-server` is enough.
+The last thing is the WAF. I configured it in `firewalld.tf`. I set it up only for the `coffee-server`, but to be honest, it is necessary for every host in the private network. For this lab, I decided that configuring it for the `coffee-server` is sufficient.
 
 ![image](https://github.com/user-attachments/assets/8f302ba7-4420-4baf-9409-b9a7b8bebff1)
 
-You can see filewall and rules instances. Rules provide access for:
+You can see the firewall and rules instances. The rules provide access for:
 
-- 443 - HTTTPS
-- 1900 - SSH to master-lb-server
-- 1901 - SSH to coffee-server
-- 1902 - SSH to drink service
-- 1903 - SSH to milk service
-- 1904 - SSH to syrup service
+- **443** - HTTPS  
+- **1900** - SSH to `master-lb-server`  
+- **1901** - SSH to `coffee-server`  
+- **1902** - SSH to `drink-service`  
+- **1903** - SSH to `milk-service`  
+- **1904** - SSH to `syrup-service`
 
 ### Deploy
 
 Let's deploy our hardware infrastructure.
 
-Firstly I need to init terraform. 
+First, I need to initialize Terraform.
 
 ```
 terraform init
@@ -207,7 +207,7 @@ terraform init
 
 ![image](https://github.com/user-attachments/assets/85113055-756c-4ccf-a0b3-fb15e99aa41e)
 
-Next let's plan infrastructure and verify that everything coffect.  
+Next, let's plan the infrastructure and verify that everything is correct.
 
 ```
 terraform plan
@@ -215,9 +215,9 @@ terraform plan
 
 ![image](https://github.com/user-attachments/assets/c49740ee-25f2-4d46-a729-bd42d8637d37)
 
-Now we can verify that configuration is worikng and terraform will create exactly what we need.
+Now we can verify that the configuration is working and Terraform will create exactly what we need.
 
-Next step is to apply our configuration. 
+The next step is to apply our configuration.
 
 ```
 terraform apply
@@ -227,21 +227,21 @@ terraform apply
 
 Cloud rejected my `leet` network `192.133.7.0/24`, so I have to change it to `192.168.7.0/24`.
 
-Try again and everyting deployed!
+Try again, and everything is deployed!
 
 ![image](https://github.com/user-attachments/assets/d6b1d335-ec30-48a4-9015-f50bba59f03e)
 
-We can proof it in web interface.
+We can prove it in the web interface.
 
 ![image](https://github.com/user-attachments/assets/0e899dcb-9f05-4bf8-8307-afa56e8c4bfc)
 
 ![image](https://github.com/user-attachments/assets/803d3e1b-4791-405c-9137-512dd2441aa5)
 
-Let's try to connect to master load balance to proof, that forwarding works correct.
+Let's try to connect to the master load balancer to prove that forwarding works correctly.
 
 ![image](https://github.com/user-attachments/assets/74062a16-8ba0-48ce-8848-8fd0ca3a56b4)
 
-Everything works. Deploy if hardware infrastructure finished!
+Everything works. Deploy of the hardware infrastructure is finished!
 
 ## 4.3. Choose Software Configuration Management (SCM) tool.
 
@@ -252,7 +252,7 @@ but remember that it is probably more difficult to work with these
 tools and you are responsible for your choice.
 ```
 
-I decided to use Ansible. I also have good experience with SaltStack, but I think it is too hard (complex) for lab.
+I decided to use Ansible. I also have good experience with SaltStack, but I think it is too complex for the lab.
 
 ## 4.4 Using SCM tool, write a playbook tasks to deliver and run your application to cloud instance/local VM.
 
@@ -265,43 +265,43 @@ In real practice, we almost newer use poor playbooks where everything all in one
 
 ### Preparation
 
-I will use the following folder structure for `ansible`:
+I will use the following folder structure for `Ansible`:
 
 ![image](https://github.com/user-attachments/assets/360156b1-12f9-4435-9bc6-9a53e04c8698)
 
-I will show implementation of `ansible` roles and playbooks only for coffee service, because others are almost the same. You can find them on github.
+I will show the implementation of `Ansible` roles and playbooks only for the coffee service, because the others are almost the same. You can find them on GitHub.
 
 ### Inplementation
 
-First of all we need to implement `role` for servicce. Let's start with tasks, then I will add variables for parametrization in they needed.
+First of all, we need to implement the `role` for the service. Let's start with the tasks, and then I will add variables for parameterization if needed.
 
-Role will have 5 tasks. 1 of them is auxiliary and 4 are for usage:
+The role will have 5 tasks, with one auxiliary task and 4 for actual usage:
 
-- `main.yml` - this is task that is responsible to proxy tasks call to concrete task inside role. I will show it further.
-- `build.yml` - this is task for building our server. Actually building docker image.
-- `deploy.yml` - this is task to deploy service. It will render all the files to build and run service.
-- `start.yml` - this is task to start service.
-- `stop.yml` - this is task to stop service.
+- `main.yml` - This task is responsible for proxying task calls to the concrete tasks inside the role. I will show it further.
+- `build.yml` - This task is for building our server, specifically for building the Docker image.
+- `deploy.yml` - This task is for deploying the service. It will render all the files needed to build and run the service.
+- `start.yml` - This task is for starting the service.
+- `stop.yml` - This task is for stopping the service.
 
-Let's start implementation:
+Let's start with the implementation:
 
 `main.yml`
 
 ![image](https://github.com/user-attachments/assets/57f3ca22-1bba-4161-8a1c-0418232d25c1)
 
-As we can see, when I will implement playbook, I will use variable `coffee_task` to call concrete task.
+As we can see, when I implement the playbook, I will use the variable `coffee_task` to call the concrete task.
 
 `build.yml`
 
 ![image](https://github.com/user-attachments/assets/06abdaa3-bffc-4f4e-91dc-8acd0505ec4b)
 
-Here we can see default `docker build` command. There are 2 build - `coffee` and `sidecar`, because `sidecar` used in pair with coffee. To be honest, it is too small, to implement separate role. We also can see first two real variables here. I using `coffee_tag`, because use `latest` is bad practice. But default value will be `latest` :).
+Here we can see the default `docker build` command. There are 2 builds — `coffee` and `sidecar`, because `sidecar` is used in conjunction with coffee. To be honest, it's too small to implement a separate role. We also see the first two real variables here. I'm using `coffee_tag` because using `latest` is bad practice. However, the default value will be `latest` :).
 
 `deploy.yml`
 
 ![image](https://github.com/user-attachments/assets/9ce95a6d-18e0-4bd8-80d7-8dc3b8cb8437)
 
-The most interesting task in my opinion is `deploy.yml`. I clone repo of service to for build. If there were `docker registry`, i would build it on local or separate machine. But in this case, I will build on target server. 
+The most interesting task, in my opinion, is `deploy.yml`. I clone the repository of the service for the build. If there were a `docker registry`, I would build it on a local or separate machine. But in this case, I will build it on the target server.
 
 `start.yml`
 
@@ -311,27 +311,27 @@ The most interesting task in my opinion is `deploy.yml`. I clone repo of service
 
 ![image](https://github.com/user-attachments/assets/6850f2aa-22ae-40a1-b8ea-d296611b5324)
 
-There are simple start and stop `docker-compose` tasks. Nothing interesting.
+There are simple start and stop `docker-compose` tasks. Nothing too interesting.
 
-When tasks are ready, I need to implement `defaults/main.yml` with default variables.
+Once the tasks are ready, I need to implement `defaults/main.yml` with default variables.
 
 ![image](https://github.com/user-attachments/assets/07a9d3a6-0477-4c57-963c-1fb607039a43)
 
-You might have noticed that there no variables `default_user` and `deploy_dir`. This variables have no default parameter and must be defined separately. This is because they we dont know in what context our role will be used. And this variable may be general, if there more that one service on server.
+You might have noticed that there are no variables `default_user` and `deploy_dir`. These variables have no default values and must be defined separately. This is because we don't know in what context our role will be used. Additionally, these variables may be general if there is more than one service on the server.
 
-Last thing is to modify `docker-compose.yml` as I promised earlier.
+The last thing is to modify `docker-compose.yml`, as I promised earlier.
 
 ![image](https://github.com/user-attachments/assets/118c013d-27af-45e7-8b8d-4c0ca0e58185)
 
 Key changes:
 
-- Image tag is also templated.
-- Still we have separate servers, we dont need external network. Because of this, I will create bridge between `coffee` and `sidecar-lb` inside docker-compose.
-- `MASTER_URL` variable changed with `master load balances`'s IP.
+- The image tag is also templated.
+- Since we still have separate servers, we don't need an external network. Because of this, I will create a bridge between `coffee` and `sidecar-lb` inside `docker-compose`.
+- The `MASTER_URL` variable has been changed to the `master load balancer`'s IP.
 
-Okay, when we finished role implementation, we can implement playbooks and inventories.
+Okay, once we finish the role implementation, we can implement the playbooks and inventories.
 
-There will be 4 playbooks. They are the same as the role tasks, except the `main` task. All playbooks are the same. Only thing that changes is `coffee_task` variable.
+There will be 4 playbooks. They are the same as the role tasks, except for the `main` task. All playbooks are similar. The only thing that changes is the `coffee_task` variable.
 
 `deploy.yml`
 
@@ -341,17 +341,17 @@ There will be 4 playbooks. They are the same as the role tasks, except the `main
 
 ![image](https://github.com/user-attachments/assets/7e9d9869-67ff-47a7-a389-540c7f2c37ac)
 
-To make our role available for playbooks, I will configure `ansible.cfg` file.
+To make our role available for the playbooks, I will configure the `ansible.cfg` file.
 
 ![image](https://github.com/user-attachments/assets/ee5ffbff-35d0-4db2-a865-9d4f9b76cafe)
 
 Settings:
 
-- `host_key_checking = False` - apply `-o HostKeyChecking=no` flag for `ssh` connection
-- `roles_path=../roles` - is like PATH variable, but for roles
-- `inventory=localhost.cfg` - configures default inventory file.
+- `host_key_checking = False` - applies the `-o HostKeyChecking=no` flag for `ssh` connections.
+- `roles_path=../roles` - This is like the `PATH` variable but for roles.
+- `inventory=localhost.cfg` - Configures the default inventory file.
 
-Now we can implement inventory file. There are inventories: `localhost.cfg` and `remote.cfg`
+Now we can implement the inventory file. There will be two inventories: `localhost.cfg` and `remote.cfg`.
 
 `localhost.cfg`
 
@@ -361,11 +361,11 @@ Now we can implement inventory file. There are inventories: `localhost.cfg` and 
 
 ![image](https://github.com/user-attachments/assets/a7b6b0a8-b825-4ec1-8062-2635976f589c)
 
-I also implemented roles and playbooks for other services, you can check it on **[Github](https://github.com/ullibniss/INNO-Sevice-Mash/tree/master/ansible)**
+I also implemented roles and playbooks for other services. You can check them out on **[Github](https://github.com/ullibniss/INNO-Sevice-Mash/tree/master/ansible)**.
 
 ### Deployment
 
-Let's start deployment. To deploy our services to remote servers I will use the following command:
+Let's start the deployment. To deploy our services to remote servers, I will use the following command:
 
 ```
 ansible-playbook -i remote.cfg {deploy.yml,build.yml,start.yml} -K
@@ -380,32 +380,38 @@ I repeated this process for all other services. And as a result I've got:
 
 ![image](https://github.com/user-attachments/assets/abf91be4-a609-4661-822c-200a2ab65182)
 
-This indicates that system works correctly. I explain: 
+This indicates that the system works correctly. Let me explain:
 
-- If one of milk, syrup or drink didn't worked,  we would not have all the parts of message.
-- if one of master lb, sidecar lb or coffee didn't worked, we wound not have any answer.
+- If any of the milk, syrup, or drink didn't work, we would not have all the parts of the message.
+- If any of the master LB, sidecar LB, or coffee didn't work, we would not have any response.
 
-We can also see result in web browser:
+We can also see the result in the web browser:
 
 ![image](https://github.com/user-attachments/assets/6f7ec376-dabd-4fa6-aaa8-5478cae9c267)
 
+### What could be done better:
+
+1) I could use a `docker registry` instead of building images on the servers.
+2) I could use `Vault` to store sensitive data and load server credentials from there via the `ansible hvac` module.
+3) I could use a real NAT server with a public IP instead of using the coffee-server.
+
 # Task 5 - Play with SCM cases
 
-While I completing previous tasks, I implemented one more role. I decided to show it in task 5. 
+While completing the previous tasks, I implemented one more role. I decided to show it in task 5.
 
-This role is for advanced provision of servers. It will make 3 things:
+This role is for advanced server provisioning. It will perform 3 actions:
 
-1) Configure `/hosts` file. Set aliases for local network.
-2) Configure `ssh`. Deploy keys and make some secury options.
-3) Install needed packages. In this current example install docker packages.
+1) Configure the `/hosts` file and set aliases for the local network.
+2) Configure `ssh` by deploying keys and applying some security options.
+3) Install the necessary packages. In this example, it installs the Docker packages.
 
-Every responsibility is one task.
+Each responsibility is handled by a separate task.
 
 - `manage_network.yml`
 
 ![image](https://github.com/user-attachments/assets/b484c71f-18cb-43da-8cce-cd7490b0a648)
 
-Is renders the following file to `/etc/hosts`:
+It renders the following file to `/etc/hosts`:
 
 ![image](https://github.com/user-attachments/assets/30043b7c-b835-4cd8-8f08-868e33ae79bb)
 
@@ -423,7 +429,7 @@ This task renders keys from templates and configures ssh.
 
 ![image](https://github.com/user-attachments/assets/6e573e0c-5228-470c-a273-22828b783cc3)
 
-As we can see, apt updated package list and installs docker packages. It is important to install `docker` this way (not docker.io), because there are security updates.
+As we can see, `apt` updated the package list and installed the Docker packages. It is important to install Docker this way (not `docker.io`) because it includes security updates.
 
 # References
 
