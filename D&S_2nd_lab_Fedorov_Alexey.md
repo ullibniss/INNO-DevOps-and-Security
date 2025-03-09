@@ -74,7 +74,7 @@ For Drink service (Milk, Syrup are the same):
 
 ![image](https://github.com/user-attachments/assets/4fbef0dd-1480-4e8b-9f36-94a1bf9ef249)
 
-For Coffe and Sidecar service
+For Coffee and Sidecar service
 
 ![image](https://github.com/user-attachments/assets/79baf4be-7e92-496e-af0b-14ef4f4434b6)
 
