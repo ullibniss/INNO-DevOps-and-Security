@@ -22,17 +22,25 @@ application on Kubernetes cluster as well.
 
 ## 1.1 Choose an application that has such characteristics as (points with "star" are not required but recommended)
 
-I have choosen `JetBrains Youtrack` tracker as application. It meets all the requirements.
+I have chosen `JetBrains YouTrack` as the application. It meets all the requirements.
 
 ## 1.2 Get familiar with Kubernetes (k8s) and concepts.
 
-I got.
+Kubernetes automates deployment, scaling, and management of containerized applications, ensuring high availability and stability. It uses these core concepts to manage workloads efficiently across distributed systems:
+
+1. **Cluster**: A Kubernetes cluster is a set of nodes that run containerized applications. It consists of a control plane (master) and worker nodes.  
+2. **Node**: A node is a machine (physical or virtual) in the cluster. Worker nodes run Pods, while the master node manages the cluster.  
+3. **Pod**: The smallest deployable unit in Kubernetes, a Pod contains one or more containers that share storage, network, and specifications.  
+4. **Deployment**: A Deployment defines the desired state for Pods and ReplicaSets, enabling declarative updates, scaling, and rollbacks.  
+5. **Service**: A Service provides a stable network endpoint to access Pods, abstracting their dynamic IP addresses with a consistent DNS or IP.  
+6. **ConfigMap**: ConfigMaps store configuration data as key-value pairs, allowing you to decouple configuration from container images.  
+7. **Namespace**: Namespaces divide a cluster into virtual sections, enabling resource isolation and organization for teams or projects.  
 
 ## 1.3 Install and set up the necessary tools
 
-I installed necessary tools using [official documentation](https://kubernetes.io/ru/docs/tasks/tools/). 
+I installed the necessary tools using the [official documentation](https://kubernetes.io/ru/docs/tasks/tools/).
 
-`kuberctl`
+`kubectl`
 
 ![image](https://github.com/user-attachments/assets/47408a2d-4275-4325-b6c6-f7f829331ae8)
 
@@ -42,7 +50,7 @@ I installed necessary tools using [official documentation](https://kubernetes.io
 
 ## 1.4 Get access to Kubernetes Dashboard.
 
-To get access to dashboard, I started minikube and enabled `dashboard` plugin. Then I opened minikube dashboard.
+To get access to the dashboard, I started Minikube and enabled the `dashboard` plugin. Then I opened the Minikube dashboard.
 
 ![image](https://github.com/user-attachments/assets/dde99510-ae1a-4a08-8bb2-63415002c02c)
 
@@ -50,7 +58,7 @@ To get access to dashboard, I started minikube and enabled `dashboard` plugin. T
 
 ## 2.1 After installing all required lab tools and starting minikube cluster, use kubectl commands   to get and describe your cluster nodes.
 
-To get all cluster nodes I used the following command:
+To get all cluster nodes, I used the following command:
 
 ```
 kubectl get nodes
@@ -71,7 +79,7 @@ kubectl describe node minikube
 
 ## 2.{3,4} Get the OS and CPU information. Put the results into report.
 
-To get `OS` information I will simply grep `describe` output:
+To get `OS` information, I will simply grep the `describe` output:
 
 ```
 kubectl describe node minikube | grep 'OS'
@@ -79,7 +87,7 @@ kubectl describe node minikube | grep 'OS'
 
 ![image](https://github.com/user-attachments/assets/f0106e36-0c53-43d1-b0a3-24ebdbc85f97)
 
-THe same is for CPU information.
+The same is for CPU information.
 
 ![image](https://github.com/user-attachments/assets/3f87fa97-2eab-4f69-9bb6-bbaed5fd44a7)
 
@@ -90,11 +98,11 @@ THe same is for CPU information.
 
 Pod specification must include essential fields such as:
 
-- `apiVersion` - Defines the Kubernetes API version used.
-- `kind` - Specifies the type of resource (Pod).
-- `metadata` - Includes name and labels for the Pod.
+- `apiVersion` - defines the Kubernetes API version used.
+- `kind` - specifies the type of resource (Pod).
+- `metadata` - includes name and labels for the Pod.
 - `spec`:
-  - `containers` - Defines the container image, ports, environment variables, and volume mounts.
+  - `containers` - defines the container image, ports, environment variables, and volume mounts.
   - `volumes` - if persistent storage is needed.
  
 ## 3.2 Write a Pod spec for your chosen application, deploy the application and run a pod.
@@ -105,7 +113,7 @@ YouTrack requires:
 - Persistent storage for data retention.
 - A port to expose the service.
 
-I created pod spec for youtrack, here is it:
+I created pod spec for `youtrack`, here is it:
 
 ![image](https://github.com/user-attachments/assets/a8293ca3-0cc8-4778-85f2-cc93ff534d78)
 
@@ -115,7 +123,7 @@ And then I applied this configuration:
 
 ## 3.3 With kubectl , get the pods, pod logs, describe pod, go into pod shell.
 
-To check whether my pod running, i used:
+To check whether my pod running, I used:
 
 ```
 kubectl get pods
@@ -131,7 +139,7 @@ kubectl describe pod youtrack
 
 ![image](https://github.com/user-attachments/assets/496059f0-3014-4a50-9ad2-1c84ab6d3995)
 
-To see pod's logs I used the following command:
+To see the pod's logs, I used the following command:
 
 ```
 kubectl logs youtrack
@@ -139,7 +147,7 @@ kubectl logs youtrack
 
 ![image](https://github.com/user-attachments/assets/a4d0e445-9261-466b-9478-c90e8d6477d1)
 
-To execute command insibe pod, i can use the following command:
+To execute a command inside a pod, I can use the following command:
 
 ```
 kubectl exec -it youtrack -- /bin/bash
@@ -149,7 +157,7 @@ kubectl exec -it youtrack -- /bin/bash
 
 ## 3.{4.5} Make sure that your app is working correctly inside Pod. Put the results into report.
 
-To check whether my application works correct, I need to access it. I can't access it by `localhost`, because minicube run pods inside the container and this container is also has it's own IP. I will check `node`:
+To check whether my application works correctly, I need to access it. I can't access it via `localhost` because Minikube runs pods inside a container, and this container has its own IP. I will check the `nodes`:
 
 ```
 kubectl get nodes -o wide
@@ -161,7 +169,7 @@ Now let's access `Youtrack`.
 
 ![image](https://github.com/user-attachments/assets/ccf793cf-04c6-49b8-82eb-112d38218422)
 
-It is accessible, I will activate it to check how it works. 
+It is accessible. I activated it to check how it works.
 
 ![image](https://github.com/user-attachments/assets/7a3858a7-5874-4af1-bb99-c5543806a74f)
 
@@ -411,6 +419,11 @@ To simulate high Memory usage, I will use fork bomb ` :(){ :|:& };:`.
 We can see, that limit exceeded and then proccess terminated via OOM Killer. This happend because OOM killer gives mark (`oom_score`) to process and kills process with highest `oom_score` when any process reaches limit.
 
 # Task 6 - k8s Secrets
+
+```
+Secret manifest is a quite similar to configMap . However, we use Secret to work with
+confidential application data. Kubernetes encode secrets in Base64 format.
+```
 
 ## 6.1 Figure out the necessary Secret spec fields.
 
