@@ -327,6 +327,20 @@ It successfully upscaled!
 
 ## 5.5 Access pod shell and logs using Deployment labels.
 
+I will use Deployment labels to find pods related to `youtrack` deployment.
+
+![image](https://github.com/user-attachments/assets/2a3cd115-1714-4f59-9504-2b59aede2765)
+
+As we can see, there 3 pods.
+
+Let's access shell of one of the pods.
+
+![image](https://github.com/user-attachments/assets/90b265ba-c4e8-415f-96de-c2999939af49)
+
+How I will check pod's logs.
+
+![image](https://github.com/user-attachments/assets/2c7a124a-90aa-4f90-a253-7e0ac368d8f3)
+
 ## 5.6 . Make any application configuration change in your Deployment yaml and try to update the application. Monitor what are happened with pods (--watch).
 
 Let's edit application configuration. I added environment variable to change base url.
@@ -361,3 +375,286 @@ As we can see, deployment rolled back. To verify that this is prevoius version, 
 
 ## 5.8 Set up requests and limits for CPU and Memory for your application pods. Provide a PoC that it works properly. Explain and show what is happened when app reaches the CPU usage limit? And memory limit?
 
+To set limits for pods, I will use `requsts` and `limits` options. 
+
+- `requests` - defines the minimum amount of CPU and memory guaranteed for a container.
+- `limits` - defines the maximum amount of CPU and memory a container can use.
+
+I modified configuration.
+
+![image](https://github.com/user-attachments/assets/86982ea8-6b9b-4351-94b7-7cec8235ac95)
+
+Deploy:
+
+![image](https://github.com/user-attachments/assets/594a45d9-e4cb-437b-bc23-21df6efc3bdc)
+
+Let's test limits.
+
+### Test: CPU Limit Test
+
+To simulate high CPU usage, I will use `yes` command.
+
+![image](https://github.com/user-attachments/assets/9e1fbea0-ca1e-4bab-97f2-767110929a1f)
+
+![image](https://github.com/user-attachments/assets/9e42aca7-7884-4bbf-b6d2-d1b52d98df7d)
+
+As we can see, server consumens <500m of CPU. Limit works. We process reaches limit on CPU is starts throttling, because of queue of operations per tick.
+
+### Memory Limit test
+
+To simulate high Memory usage, I will use fork bomb ` :(){ :|:& };:`.
+
+![image](https://github.com/user-attachments/assets/839022ab-9436-477c-9a03-754045c7c4b7)
+
+![image](https://github.com/user-attachments/assets/c71198db-38e5-40d7-8196-c5d48934a98f)
+
+We can see, that limit exceeded and then proccess terminated via OOM Killer. This happend because OOM killer gives mark (`oom_score`) to process and kills process with highest `oom_score` when any process reaches limit.
+
+# Task 6 - k8s Secrets
+
+## 6.1 Figure out the necessary Secret spec fields.
+
+A Secret in Kubernetes is used to store sensitive information, such as passwords, API keys, or TLS certificates.
+
+Necessary fields:
+
+```
+- apiVersion: v1
+- kind: Secret
+- metadata: 
+  - name: my-secret - the name of the Secret
+- type: Opaque -  default type for generic Secrets
+- data: - contains key-value pairs where values are base64-encoded
+```
+
+## 6.2 Create and apply a new Secret manifest. For example, it could be login and password to login to your app or something else.
+
+First, I will create encoded creds.
+
+![image](https://github.com/user-attachments/assets/6eac1673-e7f7-4e9e-a099-28c119e2ade9)
+
+Next, create a manifest.
+
+![image](https://github.com/user-attachments/assets/f06a803d-7827-4f47-846d-6afc1980baa9)
+
+Apply:
+
+![image](https://github.com/user-attachments/assets/225b81a5-63e5-4ffc-9e71-408a14eec037)
+
+## 6.3 With kubectl , get and describe your secret(s).
+
+Let's describe secret.
+
+![image](https://github.com/user-attachments/assets/22a4230e-9c38-4f6f-b6af-5cbb09f4432d)
+
+We can see name and size of secret data.
+
+## 6.4 Decode your secret(s)
+
+We can use `-o jsonpath` to get data from secret and `base64 --decode` to decode base64.
+
+![image](https://github.com/user-attachments/assets/d440d2b4-52cb-4bd7-834c-201a968491c3)
+
+## 6.5 Update your Deployment to reference to your secret as environment variable. 
+
+To reference to secret I will specify `secretKeyRef` option. Modified Deployment manifest:
+
+![image](https://github.com/user-attachments/assets/f869b3b6-c7e0-46d6-b2ce-70ddb030b007)
+
+Deploy:
+
+![image](https://github.com/user-attachments/assets/97cdffc2-424e-4d74-b1fd-79928650ce40)
+
+## 6.6 Make sure that you are able to see your secret inside pod.
+
+It is enough to check environment variables inside one of the pods.
+
+![image](https://github.com/user-attachments/assets/5e6973a9-f6fc-4943-8a18-565606148ec8)
+
+# Task 7 - k8s configMap
+
+```
+ConfigMap is Kubernetes manifest to store application configuration setting in two ways:
+key-value pairs as environment variables and text (usually JSON) data as dedicated file into
+container filesystem. We usually use configMap to store non sensitive data as plain text.
+```
+
+## 7.1 Figure out the necessary configMap spec fields.
+
+A ConfigMap is used to store non-sensitive configuration data, such as:
+
+- Environment variables
+- Configuration files
+
+Necessary fields:
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-config - name of the ConfigMap
+data: - contains key-value pairs as plain text.
+  config_key1: "value1"
+  config_key2: "value2"
+```
+
+## 7.{2,3} Modify your Deployment manifest to set up some app configuration via environment variables. Create a new configMap manifest. In data spec, put some app configuration as key-value pair (it could be the same as in previous exercise). In the Deployment.Pod spec add the connection to key-value pair from configMap yaml file.
+
+Let's create configMap manifest.
+
+![image](https://github.com/user-attachments/assets/f97e3df1-d0f7-4c5b-b62c-dcbebc8f5f19)
+
+Apply:
+
+![image](https://github.com/user-attachments/assets/1ab823f0-a5dd-4e1d-89f4-bfb038283214)
+
+Deployment modification:
+
+![image](https://github.com/user-attachments/assets/07bc3e64-6a74-4c06-8a3a-a3e7636be93b)
+
+To specify configuration from configMap, I used `configMapKeyRef`.
+
+Deploy:
+
+![image](https://github.com/user-attachments/assets/0c4a8506-3daf-417b-9d4e-15acf8f66111)
+
+Verification:
+
+![image](https://github.com/user-attachments/assets/e34d989c-97d9-4e68-a969-781bb80392f4)
+
+## 7.4. Create a new file like config.json file and put some json data into.
+
+I created `config.json`.
+
+![image](https://github.com/user-attachments/assets/1ffc6412-6ed1-4e9e-aba7-982e80d8421e)
+
+# 7.{5,7} Create a new one configMap manifest. Connect configMap yaml file with config.json file to read the data from it. With kubectl , check the configMap details. Make sure that you see the data as plain text.
+
+Let's create configMap from config.json:
+
+```
+kubectl create configmap youtrack-config-file --from-file=config.json
+```
+
+![image](https://github.com/user-attachments/assets/e830ae89-c3cd-488c-9af6-8ce872782a0e)
+
+Verification:
+
+![image](https://github.com/user-attachments/assets/035315a5-5159-40d8-b9d0-a0610efe72a3)
+
+We can see file data as plaintext.
+
+## 7.6 Update your Deployment to add Volumes and VolumeMounts.
+
+I modified `youtrack-deployment`. Added volume for pod and volumeMount.
+
+![image](https://github.com/user-attachments/assets/12cd2122-6422-45b9-885d-e83a7e4caf43)
+
+Let's deploy:
+
+![image](https://github.com/user-attachments/assets/1685a6da-37f0-44e6-9b4b-c282881b9811)
+
+## Check the filesystem inside app container to show the loaded file data on the specified path.
+
+Let's verify that volume mounted and file presents.
+
+![image](https://github.com/user-attachments/assets/c0b52c9f-e845-4302-95a0-e04348ace1d6)
+
+File presents, everything works correct!
+
+# Task 8 - k8s Namespace
+
+```
+Namespace Kubernetes Manifest is designed for different projects and deployment
+environments isolation. With Namespaces we can separate App 1 deployment from App 2
+deployment, manage (and isolate) cluster resources for them, define users list to have
+access either to App 1 or to App 2 deployment. Using Namespaces , we also can define a
+different environments like DEV, TEST, STAGE. In that way, Namespaces is a required feature
+for a real Kubernetes production clusters.
+```
+
+## 8.1 Figure out the necessary Namespace spec fields.
+
+A Namespace in Kubernetes provides a logical separation for resources within a cluster.
+
+Necessary fields:
+
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-namespace -  the name of the Namespace
+```
+
+## 8.2 Create a two different Namespaces in your k8s cluster.
+
+I created namespaces manifests.
+
+![image](https://github.com/user-attachments/assets/22ccf381-6b18-4026-9e93-8afaab1667fa)
+
+Apply:
+
+![image](https://github.com/user-attachments/assets/b5b39f0f-208b-4bfe-8d45-852683039bf7)
+
+## 8.3 Using kubectl , get and describe your Namespaces.
+
+Let's describe both namespaces `youtrack-one` and `youtrack-two`.
+
+![image](https://github.com/user-attachments/assets/8e5c0ac1-401e-4bb9-ae3a-9d1979e49a99)
+
+## 8.4 Deploy two different applications in two different Namespaces with kubectl. By the way, it's acceptable even just to deploy the same objects (same previous app) in the different Namespaces but with different resources names.
+
+I will deploy `youtrack` to one namespace and `nginx` to another namespace. I have to modify `youtrack-deployment` and create `nginx-deployment`.
+
+Youtrack deployment:
+
+![image](https://github.com/user-attachments/assets/59ed0a9b-50bb-464c-9a1d-a956bd631655)
+
+Nginx deployment:
+
+![image](https://github.com/user-attachments/assets/fd62321f-ff10-4bab-bbed-91e7e9707b0e)
+
+Let's deploy:
+
+![image](https://github.com/user-attachments/assets/c9c543fd-6fab-48d8-9aa4-2b833ea17c2d)
+
+As we can see, youtrack deployment recreated in new namespace, and nginx was also created.
+
+## 8.5 With kubectl, get and describe pods from different Namespaces witn -n flag.
+
+To get pods by namespace I need to use `-n` flag:
+
+```
+kubectl get pods -n youtrack-one
+```
+
+![image](https://github.com/user-attachments/assets/2924d798-d4ae-40a8-93eb-74abbaa609b5)
+
+I can describe pod in concrete namespace with the same flag.
+
+```
+kubectl describe pod -n youtrack-two nginx-deployment-659b9cb59d-zh77k
+```
+
+![image](https://github.com/user-attachments/assets/320798fb-2ac7-4f29-acf4-fa1e1e78ad67)
+
+![image](https://github.com/user-attachments/assets/7c6a1b21-f345-444c-bc7f-73ab76c9d670)
+
+## 8.6 Can you see and can you connect to the resources from different Namespaces?
+
+By default, Pods in different Namespaces can communicate by IP.
+
+![image](https://github.com/user-attachments/assets/882ba2b3-e810-4d4e-935c-0fdf4b3e9277)
+
+They can also communicate with FQDN if `service` is configured.
+
+# References
+
+- https://kubernetes.io/docs/tasks/tools/
+- https://kubernetes.io/docs/concepts/workloads/pods/
+- https://kubernetes.io/docs/concepts/services-networking/
+- https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+- https://kubernetes.io/docs/concepts/configuration/configmap/
+- https://kubernetes.io/docs/concepts/configuration/secret/
+- https://kubernetes.io/docs/concepts/architecture/nodes/
+- https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
