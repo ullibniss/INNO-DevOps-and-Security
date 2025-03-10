@@ -252,7 +252,12 @@ It connects.
 
 ## 4.6 Learn about Loadbalancer and NodePort.
 
-I've learnt.
+In Kubernetes, `NodePort` and `LoadBalancer` are both service types used to expose applications to external traffic, but they work in different ways:
+
+- `NodePort` exposes the service on a static port on each node in the cluster. It Allows external traffic to access the service by using any node's IP address and the specified port.
+- `LoadBalancer` provisions an external load balancer. LB automatically distributes incoming traffic across the available nodes in the cluster.
+
+Both enable external access, but `NodePort` is simpler, while `LoadBalancer` offers more flexible traffic distribution.
 
 ## 4.{7,8} Deploy an external Service to access your application from outside, e.g., from your local host. Put the results into report.
 
