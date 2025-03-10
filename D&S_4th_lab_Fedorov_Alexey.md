@@ -212,7 +212,7 @@ Let's deploy it.
 
 ## 4.3 With kubectl , get the Services and describe them.
 
-Let's check whether `youtrack` service presents:
+Let's check whether the `YouTrack` service is present.
 
 ![image](https://github.com/user-attachments/assets/c397d2a2-ae31-4b3a-9dfb-9caa240eff54)
 
@@ -228,13 +228,13 @@ kubectl describe service youtrack-service
 
 ## 4.4 Make sure that pods can communicate between each other using DNS names, check pods addresses.
 
-Unfortunately, our service has only 1 pod. Because of this, we can deploy test-pod, to check connectivity. Let's do it.
+Unfortunately, our service has only one pod. Because of this, we can deploy a test pod to check connectivity. Let's do it.
 
 ![image](https://github.com/user-attachments/assets/e4643fbb-7137-4839-9d87-9e3071c59ccb)
 
-Test pod can connect to `youtrack-service` via `DNS` name.
+The test pod can connect to `youtrack-service` using its `DNS` name.  
 
-If we check pods' IP addresses, we can see, that they are in the same network.
+If we check the pods' IP addresses, we can see that they are in the same network.
 
 ![image](https://github.com/user-attachments/assets/54a9b2f7-8642-4fe4-8331-7ce95a9fb8fe)
 
@@ -244,7 +244,7 @@ Let's recreate `youtrack` pod.
 
 ![image](https://github.com/user-attachments/assets/857154c8-f51a-4f99-ac50-a9d10ba29a1e)
 
-As we can see, when pod was recreated, it got new IP adress, but in the same network. Let's check connectivity.
+As we can see, when the pod was recreated, it received a new IP address but remained in the same network. Let's check connectivity.
 
 ![image](https://github.com/user-attachments/assets/e4124ac1-7729-4e3d-853f-9f8e5e69de1c)
 
@@ -256,7 +256,7 @@ I've learnt.
 
 ## 4.{7,8} Deploy an external Service to access your application from outside, e.g., from your local host. Put the results into report.
 
-To expose `YouTrack` outside `Kubernetes`, I will use a NodePort. Let's modify service configuration
+To expose `YouTrack` outside `Kubernetes`, I will use a `NodePort`. Let's modify the service configuration.
 
 ![image](https://github.com/user-attachments/assets/e962a57e-9402-4c66-976a-bb9fec818806)
 
@@ -264,7 +264,7 @@ Redeploy it.
 
 ![image](https://github.com/user-attachments/assets/be55e7c8-5585-42d1-9a4e-6d7cc70e42a2)
 
-Now I can access my application with `http://192.168.49.2:30080`. Ip is not changed, because lab is on localhost. But if It were cloud, I would be able to access service with public ip. 
+Now I can access my application at `http://192.168.49.2:30080`. The IP has not changed because the lab is running locally. However, if it were in the cloud, I would be able to access the service using a public IP.
 
 ![image](https://github.com/user-attachments/assets/d3a372dc-6d80-4c11-afe4-4f2d69420810)
 
@@ -294,7 +294,7 @@ Necessary Fields:
          
 ## 5.2 Make sure that you wiped previous Pod manifests. Write a Deployment spec for your pod(s) and deploy the application.
 
-I wiped previous `Pod manifests`.
+I wiped the previous `Pod` manifests.
 
 ![image](https://github.com/user-attachments/assets/d1547285-c174-424d-a03d-1765d2106395)
 
@@ -317,13 +317,13 @@ kubectl get deployments
 ![image](https://github.com/user-attachments/assets/134e9095-8206-41fc-996b-7659ae636eb6)
 
 
-Deployment been succesfully deployed. Now I will `describe` deployment.
+The deployment has been successfully deployed. Now, I will `describe` the deployment.
 
 ![image](https://github.com/user-attachments/assets/0490c407-6636-4359-ae20-6e7948eec9a6)
 
 ## 5.4 Update your Deployment manifest to scale your application to three replicas.
 
-To scale my application to three replicas, I simply need to modify `Replicas` field in configuration.
+To scale my application to three replicas, I simply need to modify the `replicas` field in the configuration.
 
 ![image](https://github.com/user-attachments/assets/711b9024-187d-483c-9e9c-2e56c323d382)
 
@@ -335,23 +335,23 @@ It successfully upscaled!
 
 ## 5.5 Access pod shell and logs using Deployment labels.
 
-I will use Deployment labels to find pods related to `youtrack` deployment.
+I will use deployment labels to find the pods related to the `YouTrack` deployment.
 
 ![image](https://github.com/user-attachments/assets/2a3cd115-1714-4f59-9504-2b59aede2765)
 
-As we can see, there 3 pods.
+As we can see, there are 3 pods.
 
-Let's access shell of one of the pods.
+Let's access the shell of one of the pods.
 
 ![image](https://github.com/user-attachments/assets/90b265ba-c4e8-415f-96de-c2999939af49)
 
-How I will check pod's logs.
+Now I will check pod's logs.
 
 ![image](https://github.com/user-attachments/assets/2c7a124a-90aa-4f90-a253-7e0ac368d8f3)
 
 ## 5.6 . Make any application configuration change in your Deployment yaml and try to update the application. Monitor what are happened with pods (--watch).
 
-Let's edit application configuration. I added environment variable to change base url.
+Let's edit the application configuration. I added an environment variable to change the base URL.
 
 ![image](https://github.com/user-attachments/assets/352d54d1-a571-4f85-96d7-e77a6a67ef7e)
 
@@ -359,11 +359,11 @@ Deploy:
 
 ![image](https://github.com/user-attachments/assets/05e20a2f-d153-40bf-a9a1-3fe6611f61f4)
 
-Using `kubectl get pods --watch`, we can see, that old pods are terminated, and new pods are running now.
+Using `kubectl get pods --watch`, we can see that the old pods are terminated, and the new pods are running now.
 
 ## 5.7 Rollback to previous application version using Deployment.
 
-To rollback to previous application version I need to check deployment history.
+To roll back to the previous application version, I need to check the deployment history.
 
 ```
 kubectl rollout history deployment youtrack-deployment
@@ -371,24 +371,24 @@ kubectl rollout history deployment youtrack-deployment
 
 ![image](https://github.com/user-attachments/assets/1b55c327-b545-4f65-aa6b-2fa902c14bac)
 
-Unfortunately, there no cause specified for previous deployment.
+Unfortunately, no cause is specified for the previous deployment.
 
-I can rollback using version number. Let's do it.
+I can roll back using the version number. Let's do it.
 
 ![image](https://github.com/user-attachments/assets/42ab616a-5ca0-4f38-bcc3-b37668715c94)
 
-As we can see, deployment rolled back. To verify that this is prevoius version, we can check, that there no environment variables.
+As we can see, the deployment has been rolled back. To verify that this is the previous version, we can check that there are no environment variables.
 
 ![image](https://github.com/user-attachments/assets/f30de954-09cb-4696-8749-81051ce7ca24)
 
 ## 5.8 Set up requests and limits for CPU and Memory for your application pods. Provide a PoC that it works properly. Explain and show what is happened when app reaches the CPU usage limit? And memory limit?
 
-To set limits for pods, I will use `requsts` and `limits` options. 
+To set limits for pods, I will use the `requests` and `limits` options.
 
-- `requests` - defines the minimum amount of CPU and memory guaranteed for a container.
-- `limits` - defines the maximum amount of CPU and memory a container can use.
+- `requests` defines the minimum amount of CPU and memory guaranteed for a container.
+- `limits` defines the maximum amount of CPU and memory a container can use.
 
-I modified configuration.
+I have modified the configuration.
 
 ![image](https://github.com/user-attachments/assets/86982ea8-6b9b-4351-94b7-7cec8235ac95)
 
@@ -400,23 +400,23 @@ Let's test limits.
 
 ### Test: CPU Limit Test
 
-To simulate high CPU usage, I will use `yes` command.
+To simulate high CPU usage, I will use the `yes` command.
 
 ![image](https://github.com/user-attachments/assets/9e1fbea0-ca1e-4bab-97f2-767110929a1f)
 
 ![image](https://github.com/user-attachments/assets/9e42aca7-7884-4bbf-b6d2-d1b52d98df7d)
 
-As we can see, server consumens <500m of CPU. Limit works. We process reaches limit on CPU is starts throttling, because of queue of operations per tick.
+As we can see, the server consumes less than 500m of CPU. The limit works. When the process reaches the CPU limit, it starts throttling due to the queue of operations per tick.
 
 ### Memory Limit test
 
-To simulate high Memory usage, I will use fork bomb ` :(){ :|:& };:`.
+To simulate high memory usage, I will use the fork bomb :(){ :|:& };:.
 
 ![image](https://github.com/user-attachments/assets/839022ab-9436-477c-9a03-754045c7c4b7)
 
 ![image](https://github.com/user-attachments/assets/c71198db-38e5-40d7-8196-c5d48934a98f)
 
-We can see, that limit exceeded and then proccess terminated via OOM Killer. This happend because OOM killer gives mark (`oom_score`) to process and kills process with highest `oom_score` when any process reaches limit.
+We can see that the limit was exceeded, and then the process was terminated by the OOM Killer. This happened because the OOM Killer assigns a mark (`oom_score`) to each process and kills the process with the highest `oom_score` when any process exceeds its memory limit.
 
 # Task 6 - k8s Secrets
 
@@ -460,17 +460,17 @@ Let's describe secret.
 
 ![image](https://github.com/user-attachments/assets/22a4230e-9c38-4f6f-b6af-5cbb09f4432d)
 
-We can see name and size of secret data.
+We can see the name and size of the secret data.
 
 ## 6.4 Decode your secret(s)
 
-We can use `-o jsonpath` to get data from secret and `base64 --decode` to decode base64.
+We can use `-o jsonpath` to extract data from the secret and `base64 --decode` to decode the base64-encoded content.
 
 ![image](https://github.com/user-attachments/assets/d440d2b4-52cb-4bd7-834c-201a968491c3)
 
 ## 6.5 Update your Deployment to reference to your secret as environment variable. 
 
-To reference to secret I will specify `secretKeyRef` option. Modified Deployment manifest:
+To reference the secret, I will specify the `secretKeyRef` option. Modified deployment manifest:
 
 ![image](https://github.com/user-attachments/assets/f869b3b6-c7e0-46d6-b2ce-70ddb030b007)
 
@@ -480,7 +480,7 @@ Deploy:
 
 ## 6.6 Make sure that you are able to see your secret inside pod.
 
-It is enough to check environment variables inside one of the pods.
+It is enough to check the environment variables inside one of the pods.
 
 ![image](https://github.com/user-attachments/assets/5e6973a9-f6fc-4943-8a18-565606148ec8)
 
@@ -513,7 +513,7 @@ data: - contains key-value pairs as plain text.
 
 ## 7.{2,3} Modify your Deployment manifest to set up some app configuration via environment variables. Create a new configMap manifest. In data spec, put some app configuration as key-value pair (it could be the same as in previous exercise). In the Deployment.Pod spec add the connection to key-value pair from configMap yaml file.
 
-Let's create configMap manifest.
+Let's create the ConfigMap manifest.
 
 ![image](https://github.com/user-attachments/assets/f97e3df1-d0f7-4c5b-b62c-dcbebc8f5f19)
 
@@ -525,7 +525,7 @@ Deployment modification:
 
 ![image](https://github.com/user-attachments/assets/07bc3e64-6a74-4c06-8a3a-a3e7636be93b)
 
-To specify configuration from configMap, I used `configMapKeyRef`.
+To specify configuration from the ConfigMap, I used `configMapKeyRef`.
 
 Deploy:
 
@@ -543,7 +543,7 @@ I created `config.json`.
 
 # 7.{5,7} Create a new one configMap manifest. Connect configMap yaml file with config.json file to read the data from it. With kubectl , check the configMap details. Make sure that you see the data as plain text.
 
-Let's create configMap from config.json:
+Let's create a ConfigMap from `config.json`:
 
 ```
 kubectl create configmap youtrack-config-file --from-file=config.json
@@ -555,11 +555,11 @@ Verification:
 
 ![image](https://github.com/user-attachments/assets/035315a5-5159-40d8-b9d0-a0610efe72a3)
 
-We can see file data as plaintext.
+We can see the file data as plaintext.
 
 ## 7.6 Update your Deployment to add Volumes and VolumeMounts.
 
-I modified `youtrack-deployment`. Added volume for pod and volumeMount.
+I modified the `youtrack-deployment` by adding a volume for the pod and a volumeMount.
 
 ![image](https://github.com/user-attachments/assets/12cd2122-6422-45b9-885d-e83a7e4caf43)
 
@@ -569,11 +569,11 @@ Let's deploy:
 
 ## Check the filesystem inside app container to show the loaded file data on the specified path.
 
-Let's verify that volume mounted and file presents.
+Let's verify that the volume is mounted and the file is present.
 
 ![image](https://github.com/user-attachments/assets/c0b52c9f-e845-4302-95a0-e04348ace1d6)
 
-File presents, everything works correct!
+The file is present, and everything is working correctly!
 
 # Task 8 - k8s Namespace
 
@@ -601,7 +601,7 @@ metadata:
 
 ## 8.2 Create a two different Namespaces in your k8s cluster.
 
-I created namespaces manifests.
+I created the namespaces manifests.
 
 ![image](https://github.com/user-attachments/assets/22ccf381-6b18-4026-9e93-8afaab1667fa)
 
@@ -611,13 +611,13 @@ Apply:
 
 ## 8.3 Using kubectl , get and describe your Namespaces.
 
-Let's describe both namespaces `youtrack-one` and `youtrack-two`.
+Let's describe both namespaces `youtrack-one` and `youtrack-two`..
 
 ![image](https://github.com/user-attachments/assets/8e5c0ac1-401e-4bb9-ae3a-9d1979e49a99)
 
 ## 8.4 Deploy two different applications in two different Namespaces with kubectl. By the way, it's acceptable even just to deploy the same objects (same previous app) in the different Namespaces but with different resources names.
 
-I will deploy `youtrack` to one namespace and `nginx` to another namespace. I have to modify `youtrack-deployment` and create `nginx-deployment`.
+I will deploy `YouTrack` to one namespace and `Nginx` to another namespace. I need to modify the `youtrack-deployment` and create the `nginx-deployment`.
 
 Youtrack deployment:
 
@@ -631,11 +631,11 @@ Let's deploy:
 
 ![image](https://github.com/user-attachments/assets/c9c543fd-6fab-48d8-9aa4-2b833ea17c2d)
 
-As we can see, youtrack deployment recreated in new namespace, and nginx was also created.
+As we can see, the `YouTrack` deployment was recreated in the new namespace, and `Nginx` was also created.
 
 ## 8.5 With kubectl, get and describe pods from different Namespaces witn -n flag.
 
-To get pods by namespace I need to use `-n` flag:
+To get pods by namespace, I need to use the `-n` flag:
 
 ```
 kubectl get pods -n youtrack-one
@@ -643,7 +643,7 @@ kubectl get pods -n youtrack-one
 
 ![image](https://github.com/user-attachments/assets/2924d798-d4ae-40a8-93eb-74abbaa609b5)
 
-I can describe pod in concrete namespace with the same flag.
+I can describe a pod in a specific namespace using the same `-n` flag.
 
 ```
 kubectl describe pod -n youtrack-two nginx-deployment-659b9cb59d-zh77k
@@ -655,11 +655,11 @@ kubectl describe pod -n youtrack-two nginx-deployment-659b9cb59d-zh77k
 
 ## 8.6 Can you see and can you connect to the resources from different Namespaces?
 
-By default, Pods in different Namespaces can communicate by IP.
+By default, pods in different namespaces can communicate by IP.
 
 ![image](https://github.com/user-attachments/assets/882ba2b3-e810-4d4e-935c-0fdf4b3e9277)
 
-They can also communicate with FQDN if `service` is configured.
+They can also communicate with FQDN if a `service` is configured.
 
 # References
 
